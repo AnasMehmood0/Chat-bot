@@ -1,0 +1,63 @@
+{
+  "public": {
+    "chainlit_cloud": {
+      "oauth_providers": []
+    },
+    "custom_css": null,
+    "custom_js": null,
+    "user_env": [],
+    "features": {
+      "data_collection": true,
+      "enable_feedback": true,
+      "html_enabled": true,
+      "hide_cot": false,
+      "hide_watermark": true
+    },
+    "data_collection": {
+      "url": null,
+      "headers": {}
+    }
+  },
+  "project_name": "Anas's Super Cool AI Assistant",
+  "author_email": "anasmehmoodkhanlodhi@gmail.com",
+  "user_session_timeout": 3600,
+  "telemetry": true,
+  "prod_url": null,
+  "elements_render_delay": 0,
+  "ui": {
+    "name": "Anas's Colorful AI Assistant",
+    "description": "Your friendly, super cool, and attractive AI companion!",
+    "theme": "dark", 
+    "playground": {
+      "enabled": true,
+      "provider_keys": {}
+    },
+    "colors": {
+      "primary": "#FF6B6B",      
+      "background": "#F0F8FF", 
+      "paper": "#FFFFFF",        
+      "text": "#333333",         
+      "secondary": "#4ECDC4",   
+      "tertiary": "#FFE66D",     
+      "success": "#28a745",      
+      "warning": "#ffc107",      
+      "danger": "#dc3545",    
+      "info": "#17a2b8"       
+    },
+    "darkColors": { 
+      "primary": "#FF6B6B",
+      "background": "#2C3E50",  
+      "paper": "#34495E",       
+      "text": "#ECF0F1",         
+      "secondary": "#4ECDC4",
+      "tertiary": "#FFE66D",
+      "success": "#28a745",
+      "warning": "#ffc107",
+      "danger": "#dc3545",
+      "info": "#17a2b8"
+    },
+    "font_family": "Inter, sans-serif",
+    "host": "0.0.0.0",
+    "port": 8000
+}
+}

@@ -10,10 +10,8 @@ load_dotenv()
 # --- IMPORTANT: API Key Handling ---
 # In a real application, you should load this from environment variables
 # or a secure configuration system, not hardcode it directly in the script.
-# The `__initial_auth_token` and `__firebase_config` are handled by the Canvas environment.
-# For direct API calls within a Python script, ensure your environment variable is set.
-# For this example, I will keep the provided placeholder.
-gemini_api_key = "AIzaSyAnM_iTNVP_R1ilsIsmbjk9H_K_wMqNEfs"
+gemini_api_key = "GEMINI_API_KEY" 
+gemini_api_key = os.getenv(gemini_api_key)
 
 if not gemini_api_key:
     raise ValueError("GEMINI_API_KEY is not set in the environment variables.")
@@ -23,7 +21,7 @@ async def start():
     """
     This function is called when a new chat session starts.
     It initializes the AI model, agent, and sets up the chat history.
-    It also sends the initial greeting message and sets up agent avatars.
+    It also sends the initial greeting message.
     """
     
     # Initialize the external OpenAI client for Gemini API
@@ -49,43 +47,17 @@ async def start():
     cl.user_session.set("chat history", []) 
     cl.user_session.set("config", config)
 
-    # --- UX Enhancement: Set a custom avatar for the agent ---
-    # You need to place 'assistant_avatar.png' in a 'public' folder
-    # at the root of your Chainlit project.
-    await cl.Avatar(
-        name="Anas's AI Assistant", # This name should match the agent's name
-        url="/public/assistant_avatar.png", # Path to your image file
-        size="large",
-    ).send()
-
-    # --- UX Enhancement: Define a more attractive and specific agent persona ---
-    # This helps the LLM generate more consistent and engaging responses.
+    # Reverted to original, simpler agent instructions
     agent: Agent = Agent(
-        name="Anas's AI Assistant", # Name displayed in the UI
-        instructions=(
-            "You are a friendly, knowledgeable, and slightly enthusiastic AI assistant created by Anas. "
-            "Your goal is to provide helpful information, answer questions clearly, and make interactions enjoyable. "
-            "Always be polite, concise, and offer to assist further. "
-            "You can use emojis sparingly to add a touch of warmth and personality. "
-            "Do not act like a generic chatbot; strive to be engaging and proactive."
-        ),
-        model=model
+        name="Assistant", # Original name
+        instructions="A helpful assistant that can answer questions and provide information.", # Original instructions
+        model=model,
+        tools=[] # Kept this line as it fixed a previous error.
     )
     cl.user_session.set("agent", agent) 
     
-    # --- UX Enhancement: Send a more welcoming and engaging greeting ---
-    # Includes action buttons for quick user interaction.
-    await cl.Message(
-        content=(
-            "👋 Hey there! I'm Anas's AI Assistant, ready to help you out. "
-            "What's on your mind today? Let's get started! 😊"
-        ),
-        actions=[ # Optional action buttons for quick user interaction
-            cl.Action(name="suggest_topics", value="What can you do?", label="💡 Suggest topics"),
-            cl.Action(name="tell_joke", value="Tell me a joke!", label="🤣 Tell me a joke"),
-            cl.Action(name="give_feedback", value="I have feedback", label="✍️ Give feedback"),
-        ]
-    ).send()
+    # Reverted to original, simpler greeting message
+    await cl.Message(content="Hello! I am your assistant by Anas 🤷‍♂. How can I help you today?").send()
         
 @cl.on_message
 async def main(message: cl.Message):
@@ -95,7 +67,6 @@ async def main(message: cl.Message):
     """
 
     # Show a "thinking" message while the AI processes the request
-    # --- UX Enhancement: Keep the animated thinking message ---
     msg = cl.Message(content="Thinking...✨✨🤔🤔")
     await msg.send()
     
@@ -108,7 +79,7 @@ async def main(message: cl.Message):
     history.append({"role": "user", "content": message.content})
         
     try:
-        # --- Debugging: Removed verbose print statements for cleaner console output ---
+        # Debugging print statements are now optional and can be re-enabled if needed
         # print("\n[CALLing_AGENT_WITH_CONTEXT]\n", history, "\n[CALLing_AGENT_WITH_CONTEXT]\n")
             
         # Run the agent with the current chat history as input
@@ -128,19 +99,12 @@ async def main(message: cl.Message):
         # Update chat history in the user session with the agent's complete exchange
         cl.user_session.set("chat history", result.to_input_list())
         
-        # --- Debugging: Optional print statements for console logging ---
+        # Debugging print statements for console logging
         print(f"User: {message.content}")
         print(f"Assistant: {response_content}")
             
     except Exception as e:
-        # --- UX Enhancement: More user-friendly error message ---
-        # Provide empathy and guidance instead of a raw error.
-        msg.content = (
-            f"Oops! Something went wrong on my end. 😥 I apologize for the inconvenience. "
-            f"It seems I'm having trouble processing that request right now. "
-            f"Please try again in a moment, or rephrase your request. "
-            f"If the problem persists, feel free to give me feedback so Anas can take a look! "
-            f"\n\n**(Error details for developer: `{str(e)}`)**" # Keep error details for you.
-        )
+        # Reverted to original, simpler error message
+        msg.content = f"An error occurred: {str(e)}"
         await msg.update()
-        print(f"Error: {str(e)}") # Always log errors for debugging
+        print(f"Error: {str(e)}")
